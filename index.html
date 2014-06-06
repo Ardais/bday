@@ -4,51 +4,48 @@
     <meta charset="utf-8">
     <title>Birthdays</title>
     <link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/reset.css">
 	<script type="text/javascript">		
 
 	</script>
 </head>
 <body>
 <div id="container">
-
+<h1>Birthday Calculator</h1>
+<h4>Beta</h4>
 <script>
 	// TO-DO
-	// - findDay(futureDay) returns the wrong day. You need to increment the number by 1 before changing it to the day, but
-	//   for some reason whenever you try to add 1 to the day value, it comes out undefined....
+	// - Incorporate time zones
+	// - Collect user input and calculate based on that (instead of fixed value)
+	// - Insert/Modify/Update multiple birthdays and display them in a table
 
-	//birthdate in year-month-day format
-	//2013-04-13 is saturday april 13
+	//birthdate in year-month-day format - Example: 2013-04-13 is saturday april 13
 	var dateString = "1987-12-03";
 	var age = calcAge(dateString);
 	var futureBday = nextBday(dateString, age);
 	var birthday = curBday(dateString);
 	
-	
-	
 	//calculate birthday
-	//var dob = calcAge(dateString);
 	function calcAge(dateString) {
 		var birthday = +new Date(dateString);
 		return~~ ((Date.now() - birthday) / (31557600000));
 	}
 	function curBday(dateString){
 		var ubday = new Date(dateString);
-		//add 5 hours to time to makeup for GMT
-		//I need to fix this so your time zone is detected
-		//and the right amount of time is subtracted.
+		//add 5 hours to time to makeup for GMT - Time zones on to-do list
 		ubday.setHours(ubday.getHours() + 5)
 		return ubday;
 	}
 	function nextBday(dateString, age){
 		var age = age + 1;
-		//it has to be 365.27 because a year is actually something liek 365.25 days
-		//var yearDate = age * 365.27;
-		//var birthday = new Date(dateString);
-		//birthday.setDate(birthday.getDate() + yearDate);
-		//1 year in milliseconds = 31556900000
+		//it has to be 365.27 because a year is actually something like 365.27 days
+			//var yearDate = age * 365.27;
+			//var birthday = new Date(dateString);
+			//birthday.setDate(birthday.getDate() + yearDate);
+			//1 year in milliseconds = 31556900000
 		var yearDate = age * 365.27;
 		var birthday = new Date(dateString);
-		console.log(birthday);
+		//console.log(birthday); debugging line
 		birthday.setDate(birthday.getDate() + yearDate);
 		return birthday;
 	}
@@ -58,7 +55,7 @@
 		var today = new Date();
 		var msPerDay = 24*60*60*1000;
 		//figure out the date of your next birthday
-		//NOTE: this is rounded up no matter what so that the day before it won't say "0 days remaining"
+		//NOTE: this is rounded up (Math.round) no matter what so that the day before it won't say '0 days' or '.23' days remaining
 		var x = Math.round(((bDay.getTime() - today.getTime())/ msPerDay));
 		return x;
 	}
@@ -135,45 +132,32 @@
 		}
 		return x;
 	}
+	//Displays the age
+	document.write("<h2>Age: </h2>");
+	document.write("<h3>" + age + "</h3>");
+	//Displays the next birthdate
+	document.write("<h2>Next Birthday: </h2>");
+	document.write("<h3>" + findDay(futureBday) + ", " + (futureBday.getDate()+1) + " " + findMonth(futureBday) + " " + futureBday.getFullYear() + "</h3>");
+	//Displays the days left until next birthdate
+	document.write("<h2> Days left: </h2>");
+	document.write("<h3>" + daysLeft(futureBday) + "</h3>");
+	//Displays the Birthday
+	document.write("<h2>Birthday: </h2>");
+	document.write("<h3>" + findDay(birthday) + ", " + (birthday.getDate()) + " " + findMonth(birthday) + " " + birthday.getFullYear() + "</h3>");
+	document.write("<h1>" + dateString + "</h1>");
 	
-	document.write("Age: " + age);
-	document.write("<br />");
-	document.write("Next Birthday: " + findDay(futureBday) + ", " + (futureBday.getDate()+1) + " " + findMonth(futureBday) + " " + futureBday.getFullYear());
-	document.write("<br />");
-	document.write("Days left: " + daysLeft(futureBday));
-	document.write("<br />");
-	document.write("Birthday: " + findDay(birthday) + ", " + (birthday.getDate()) + " " + findMonth(birthday) + " " + birthday.getFullYear());
-	console.log(birthday.getDay()+1);
-	document.write("<br />");
-	document.write("futureBday: " + futureBday.getDay() + "  - birthday: " + birthday.getDay());
-	document.write("<br />");
-	document.write("futureBday: " + nextBday(dateString, age));
-	document.write("<br />");
-	document.write("curBday: " + curBday(dateString));
-	
-	
-	//this adds hours to the date
-	//Date.prototype.addHours = function(h){
-	//	this.setHours(this.getHours()+h);
-	//	return this;
-	//}
-	
-	
-	//print age
-	//document.write(dob);
-	//document.write("<br />");
-	//document.write("Date.now: " + Date.now());
-	//document.write("<br />");
-	//document.write("dateString: " + dateString);
-	//document.write("<br />");
-	//document.write("Date(dateString): " + (+new Date(dateString)));
-	//document.write("<br />");
-	//document.write("Date.now - date(dateString): " + ~~((Date.now() - (-325987200000))/31557600000));
-	//document.write("<br />");
-	
+	/* HELPFUL DEBUGGING CODE
+		document.write("futureBday: " + futureBday.getDay() + "  - birthday: " + birthday.getDay());
+		document.write("<br />");
+		document.write("futureBday: " + nextBday(dateString, age));
+		document.write("<br />");
+		document.write("curBday: " + curBday(dateString));
+	*/
+
 	//convert epoch to readable
 	//var myDate = new Date(565506000*1000);
 	//document.write(myDate);
+	
 	//convert readable to epoch
 	//var meDate = new Date("December 3, 1987 00:00:00");
 	//var meData = meDate.getTime()/1000.0;
@@ -182,52 +166,6 @@
 	
 </script>
 
-<br />
-<br />
-<br />
-<!--<script type="text/javascript">
-
-/*
-Annual Occasions Count Down script- By JavaScript Kit
-For this and over 400+ free scripts, visit http://www.javascriptkit.com
-This notice must stay intact
-*/
-
-var today=new Date()
-
-//Enter the occasion's MONTH (1-12) and DAY (1-31):
-var theoccasion=new Date(today.getFullYear(), 12, 3)
-
-//Customize text to show before and on occasion. Follow grammer below:
-var beforeOccasionText="left until birthday"
-var onOccasiontext="Today is your birthday. Happy Holidays!"
-
-var monthtext=new Array("Jan","Feb","Mar","April","May","June","July","Aug","Sep","Oct","Nov","Dec")
-theoccasion.setMonth(theoccasion.getMonth()-1) //change to 0-11 month format
-var showdate="("+monthtext[theoccasion.getMonth()]+" "+theoccasion.getDate()+")" //show date of occasion
-
-var one_day=1000*60*60*24
-var calculatediff=""
-
-calculatediff=Math.ceil((theoccasion.getTime()-today.getTime())/(one_day))
-if (calculatediff<0){ //if bday already passed
-var nextyeartoday=new Date()
-nextyeartoday.setFullYear(today.getFullYear()+1)
-calculatediff=Math.ceil((nextyeartoday.getTime()-today.getTime())/(one_day)+calculatediff)
-}
-
-//Display message accordingly
-var pluraldayornot=(calculatediff==1)? "day" : "days"
-if (calculatediff>0)
-	document.write("<b>"+calculatediff+" "+pluraldayornot+" "+beforeOccasionText+" "+showdate+"!</b>")
-else if (calculatediff==0)
-	document.write("<b>"+onOccasiontext+" "+showdate+"!</b>")
-
-</script>-->
-
-
-
 </div><!--end container-->
-
 </body>
 </html>
