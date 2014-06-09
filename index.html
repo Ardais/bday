@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
     <title>Birthdays</title>
-    <link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
 	<script type="text/javascript">		
 		// TO-DO
 		// - Incorporate time zones
@@ -188,21 +189,54 @@
 </head>
 <body>
 <div id="container">
+<nav>
 <h1>Birthday Calculator</h1>
-<h4>Beta</h4>
+<h4>Alpha</h4>
+</nav>
 <form name="bdayForm" action="" method="get">
-	<h2>Enter your birthday</h2><input type="text" name="userBday" value="1988-12-29" />
-	<h2>Birthdate</h2><input type="text" name="birthdate" value="" />
-	<h2>Next birthdate</h2><input type="text" name="nextBirthdate" value="" />
-	<h2>Age</h2><input type="text" name="age" value="" />
-	<h2>Days left</h2><input type="text" name="daysLeft" value="" />
+	<!--
+	<h2>Enter your birthday</h2>
+	
+	<input type="text" name="userBday" value="1988-12-29" />
+	
+	
+	<h2>Birthdate</h2>
+	
+	<input type="text" name="birthdate" value="" />
+	
+	
+	<h2>Next birthdate</h2>
+	
+	<input type="text" name="nextBirthdate" value="" />
+	
+	
+	<h2>Age</h2>
+	
+	<input type="text" name="age" value="" />
+	
+	
+	<h2>Days left</h2>
+	
+	<input type="text" name="daysLeft" value="" />
+	
+	
 	<br /><br />
+	
+	
 	<input type="button" value="Calc" onClick="calcBday(this.form)" />
+	-->
+	<table border="1">
+		<tr><td><h2 id="firstRow">Enter your birthday</h2></td><td class="middle"></td><td><input type="text" name="userBday" class="userInput" maxlength="10" value="1988-12-29" /></td></tr>
+		<tr><td></td><td class="middle"></td><td><h5>yyyy-mm-dd</h5></td></tr>
+		<tr><td><h2>Age</h2></td><td class="middle"></td><td><input type="text" class="output" name="age" value="" readonly /></td></tr>
+		<tr><td><h2>Birthdate</h2></td><td class="middle"></td><td><input type="text" class="output" name="birthdate" value="" readonly /></td></tr>
+		<tr><td><h2>Next birthdate</h2></td><td class="middle"></td><td><input type="text" class="output" name="nextBirthdate" value="" readonly /></td></tr>
+		<tr><td><h2>Days left</h2></td><td class="middle"></td><td><input type="text" class="output" name="daysLeft" value="" readonly /></td></tr>
+		<tr><td><h2><input type="button" value="Calculate" onClick="calcBday(this.form)" /></h2></td><td class="middle"></td><td></td></tr>
+	</table>
+	
+	
 </form>
-<script>
-
-</script>
-
 </div><!--end container-->
 </body>
 </html>

@@ -1,2 +1,32 @@
-#container {width: 45%; margin:auto;}
-#old{background-color: cyan;}
+html{
+	background-image: url('../img/clock.jpg');
+	background-size: 100%;
+	color: #fff;
+}
+td.middle {width: 10px;}
+#container {
+	width: 45%;
+	margin:auto;
+	font-family: Georgia, serif;
+}
+nav {max-width: 565px;}
+
+h1 {font-size: 3.5em; margin-bottom: 0;}
+h2{padding: 0 15px 0 15px; text-align: right; margin-bottom: 20px;}
+h2#firstRow{margin-bottom: 0;}
+h4 {text-align: right; margin-bottom: 25px; color: cyan;}
+h5{font-size: .7em; margin-bottom: 10px;}
+
+input.userInput{width: 75px; text-align: center;}
+
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+table {
+	border-collapse: collapse;
+	float: right;
+	margin: 20px;
+	background-color:rgba(0,0,0,0.5);
+}
+
