@@ -8,51 +8,44 @@
 	<script type="text/javascript">		
 		// TO-DO
 		// - Incorporate time zones
-		// - Collect user input and calculate based on that (instead of fixed value)
+		// - Format user input no matter what they type or use datepicker
 		// - Insert/Modify/Update multiple birthdays and display them in a table
 		
 		//Globals
 		var YEAR_IN_MILLISECONDS = 31557600000;
-		
-		//birthdate in year-month-day format - Example: 2013-04-13 is saturday april 13
-		var dateString = "1987-12-03";
-		var age = calcAge(dateString);
-		var futureBday = nextBday(dateString, age);
-		var birthday = curBday(dateString);
+		var dateString; //birthdate in year-month-day format - Example: 2013-04-13 is saturday april 13
+		var age;
+		var futureBday;
+		var birthday;
 		
 		function calcBday (form) {
-
 			//assigns user input to variable
 			dateString = form.userBday.value;
-			//get the input
-			var tbox = document.getElementsByName('displayBday')[0];
-			//change value of textbox to user input
-			tbox.value = bday;
-
+			//calculation of user input
+			birthday = curBday(dateString);
+				//console.log("| " + birthday + " | - this the original birthdate"); 
+			age = calcAge(dateString);
+			futureBday = nextBday(dateString, age);
+				//console.log("|| " + futureBday + " || - this is the future birthdates original calculation");
+			futureBday = curBday(futureBday);
+				//console.log("||| " + futureBday + " ||| - this is the adjusted birthdate");
+			//console.log(futureBday + " - calculations");
 			
 			
-			birthdate = 0;
-			nextBirthdate = futureDayToString(futureBday);
-			age.value = age;
-			daysLeft = 0;
+			//test logs
+			var d = new Date(dateString);
+			//console.log(d);
 			
-			/*
-			//Displays the age
-			document.write("<div id='old'>");
-			document.write("<h2>Age: </h2>");
-			document.write("<h3>" + age + "</h3>");
-			//Displays the next birthdate
-			document.write("<h2>Next Birthday: </h2>");
-			document.write("<h3>" + findDay(futureBday) + ", " + (futureBday.getDate()+1) + " " + findMonth(futureBday) + " " + futureBday.getFullYear() + "</h3>");
-			//Displays the days left until next birthdate
-			document.write("<h2> Days left: </h2>");
-			document.write("<h3>" + daysLeft(futureBday) + "</h3>");
-			//Displays the Birthday
-			document.write("<h2>Birthday: </h2>");
-			document.write("<h3>" + findDay(birthday) + ", " + (birthday.getDate()) + " " + findMonth(birthday) + " " + birthday.getFullYear() + "</h3>");
-			document.write("<h1>" + dateString + "</h1>");
-			document.write("</div>");
-			*/
+			//Get input boxes by name
+			var birthdateBox = document.getElementsByName('birthdate')[0];
+			var nextBirthdateBox = document.getElementsByName('nextBirthdate')[0];
+			var ageBox = document.getElementsByName('age')[0];
+			var daysLeftBox = document.getElementsByName('daysLeft')[0];
+			//Assign the calculated values to the input boxes
+			birthdateBox.value = birthdateToString(birthday);
+			nextBirthdateBox.value = futureDayToString(futureBday);
+			ageBox.value = age;
+			daysLeftBox.value = daysLeft(futureBday);
 			
 			/* HELPFUL DEBUGGING CODE
 				document.write("futureBday: " + futureBday.getDay() + "  - birthday: " + birthday.getDay());
@@ -80,7 +73,7 @@
 		function curBday(dateString){
 			var ubday = new Date(dateString);
 			//add 5 hours to time to makeup for GMT - Time zones on to-do list
-			ubday.setHours(ubday.getHours() + 5)
+			ubday.setHours(ubday.getHours() + 5);
 			return ubday;
 		}
 		function nextBday(dateString, age){
@@ -90,10 +83,10 @@
 				//var birthday = new Date(dateString);
 				//birthday.setDate(birthday.getDate() + yearDate);
 				//1 year in milliseconds = 31556900000
-			var yearDate = age * 365.27;
+			var yearDate = age * 365.25;
 			var birthday = new Date(dateString);
-			//console.log(birthday); debugging line
 			birthday.setDate(birthday.getDate() + yearDate);
+			//console.log(birthday);
 			return birthday;
 		}
 		function daysLeft(futureBday){
@@ -108,7 +101,14 @@
 		}
 		function futureDayToString (futureBday){
 			var futureBday = this.futureBday;
-			var day = findDay(futureBday) + ", " + (futureBday.getDate()+1) + " " + findMonth(futureBday) + " " + futureBday.getFullYear();
+			//console.log(futureBday + " - futureDayToString()");
+			var day = findDay(futureBday) + ", " + (futureBday.getDate()/*+1*/) + " " + findMonth(futureBday) + " " + futureBday.getFullYear();
+			return day;
+		}
+		function birthdateToString (Bday){
+			var birthday = Bday;
+			var day = findDay(birthday) + ", " + (birthday.getDate()) + " " + findMonth(birthday) + " " + birthday.getFullYear();
+			return day;
 		}
 		
 		function findDay(nextBday){
@@ -137,7 +137,7 @@
 			  x="Saturday";
 			  break;
 			default:
-			  document.write("Invalid weekday");
+			  console.log("Invalid weekday");
 			  x = -1;
 			}
 			return x;
@@ -146,7 +146,7 @@
 			var month =  nextBday.getMonth();
 			var x;
 			switch(month){
-				case 0:
+			case 0:
 			  x="January";
 			  break;
 			case 1:
@@ -191,15 +191,14 @@
 <h1>Birthday Calculator</h1>
 <h4>Beta</h4>
 <form name="bdayForm" action="" method="get">
-	<h2>Enter your birthday</h2><input type="text" name="userBday" value="" />
+	<h2>Enter your birthday</h2><input type="text" name="userBday" value="1988-12-29" />
 	<h2>Birthdate</h2><input type="text" name="birthdate" value="" />
 	<h2>Next birthdate</h2><input type="text" name="nextBirthdate" value="" />
 	<h2>Age</h2><input type="text" name="age" value="" />
 	<h2>Days left</h2><input type="text" name="daysLeft" value="" />
-	
+	<br /><br />
 	<input type="button" value="Calc" onClick="calcBday(this.form)" />
 </form>
-<input type="text" name="displayBday" />
 <script>
 
 </script>
