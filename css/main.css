@@ -17,12 +17,8 @@ h2#firstRow{margin-bottom: 0;}
 h4 {text-align: right; margin-bottom: 25px; color: cyan;}
 h5{font-size: .7em; margin-bottom: 10px;}
 
-input.userInput{width: 75px; text-align: center;}
-
-
-input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px white inset;
-}
+input.userInput{width: 75px; text-align: center; border: none;}
+input.output{border: none; padding-left: 6px; width: 200px;}
 table {
 	border-collapse: collapse;
 	float: right;
