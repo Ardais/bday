@@ -8,62 +8,67 @@
     <link rel="stylesheet" href="css/main.css">
 	<script type="text/javascript">		
 		// TO-DO
-		// - Incorporate time zones
+		// - Incorporate time zones (done as of 6/11/14)
 		// - Format user input no matter what they type or use datepicker
 		// - Insert/Modify/Update multiple birthdays and display them in a table
+		// - validation
+		// - modularize
+		
+		// Known Bugs
+		// - If you enter 31 days on a month without 31 days, your birthdate will be 
+		//   the 1st of the next month, but otherwise the calculations are correct
+		//
+		
+		//notes
+		//31536000000 1 year in epoch
+		//819936000000 - 26 years in epoch	
 		
 		//Globals
-		var YEAR_IN_MILLISECONDS = 31557600000;
+		var YEAR_IN_MILLISECONDS = 31557600000; //amount of milliseconds in a year
 		var dateString; //birthdate in year-month-day format - Example: 2013-04-13 is saturday april 13
-		var age;
-		var futureBday;
-		var birthday;
+		var age; //this will store the persons age
+		var futureBday; //this will store the user's future birthday after the calculation
+		var birthday; //this will store the user's birth day
+		var bDayCountdown;
 		
 		function calcBday (form) {
-			//assigns user input to variable
-			dateString = form.userBday.value;
+			//assigns user input to date variable
+			dateString = new Date(form.userBday.value);
+			dateString = fixTimezone(dateString);
+			
 			//calculation of user input
-			birthday = curBday(dateString);
-				//console.log("| " + birthday + " | - this the original birthdate"); 
+			birthday = dateString;
+				//console.log(birthday);
 			age = calcAge(dateString);
 			futureBday = nextBday(dateString, age);
-				//console.log("|| " + futureBday + " || - this is the future birthdates original calculation");
-			futureBday = curBday(futureBday);
-				//console.log("||| " + futureBday + " ||| - this is the adjusted birthdate");
-			//console.log(futureBday + " - calculations");
+				//console.log(futureBday);
+			bDayCountdown = daysLeft(futureBday);
+			//Fill the form with the calculated values
+			if(isNaN(bDayCountdown)){
+				document.getElementById('firstRow').innerHTML = "Use YYYY-MM-DD";
+				document.getElementById('firstRow').style.color = "red";
+			}
+			else if (age <= 0){
+				document.getElementById('age').innerHTML = "You haven't been born yet!";
+				document.getElementById('birthdate').innerHTML = birthdateToString(birthday);
+				document.getElementById('nextBirthdate').innerHTML = birthdateToString(birthday);
+				document.getElementById('daysLeft').innerHTML = bDayCountdown;
+			}
+			else{
+				document.getElementById('birthdate').innerHTML = birthdateToString(birthday);
+				document.getElementById('nextBirthdate').innerHTML = futureDayToString(futureBday.toUTCString());
+				document.getElementById('age').innerHTML = age;
+				document.getElementById('daysLeft').innerHTML = bDayCountdown;
+			}
 			
-			
-			//test logs
-			var d = new Date(dateString);
-			//console.log(d);
-			
-			//Get input boxes by name
-			var birthdateBox = document.getElementsByName('birthdate')[0];
-			var nextBirthdateBox = document.getElementsByName('nextBirthdate')[0];
-			var ageBox = document.getElementsByName('age')[0];
-			var daysLeftBox = document.getElementsByName('daysLeft')[0];
-			//Assign the calculated values to the input boxes
-			birthdateBox.value = birthdateToString(birthday);
-			nextBirthdateBox.value = futureDayToString(futureBday);
-			ageBox.value = age;
-			daysLeftBox.value = daysLeft(futureBday);
-			
-			/* HELPFUL DEBUGGING CODE
-				document.write("futureBday: " + futureBday.getDay() + "  - birthday: " + birthday.getDay());
-				document.write("<br />");
-				document.write("futureBday: " + nextBday(dateString, age));
-				document.write("<br />");
-				document.write("curBday: " + curBday(dateString));
-			*/
-
 			//convert epoch to readable
 			//var myDate = new Date(565506000*1000);
 			//document.write(myDate);
 			
-			//convert readable to epoch
+			//convert readable t00.0;
+			//document.write("<br /> " + meDato epoch
 			//var meDate = new Date("December 3, 1987 00:00:00");
-			//var meData = meDate.getTime()/1000.0;
-			//document.write("<br /> " + meData);
+			//var meData = meDate.getTime()/10a);
 		}
 		
 		//calculate birthday
@@ -71,31 +76,43 @@
 			var birthday = +new Date(dateString);
 			return~~ ((Date.now() - birthday) / (YEAR_IN_MILLISECONDS));
 		}
-		function curBday(dateString){
-			var ubday = new Date(dateString);
-			//add 5 hours to time to makeup for GMT - Time zones on to-do list
-			ubday.setHours(ubday.getHours() + 5);
-			return ubday;
+		
+		function fixTimezone(dateString){
+			//create a new date object
+			var date = dateString;
+			//get the timezone difference in hours (so divide by 60)
+			var zone = (date.getTimezoneOffset()/60);
+			//set the date objects hours to HOURS + TimeZoneDifference
+			date.setHours(date.getHours() + zone);
+			return date; //return updated date
 		}
+		
 		function nextBday(dateString, age){
+			/*
+		console.log(dateString + " - dateString");
 			var age = age + 1;
-			//it has to be 365.27 because a year is actually something like 365.27 days
-				//var yearDate = age * 365.27;
-				//var birthday = new Date(dateString);
-				//birthday.setDate(birthday.getDate() + yearDate);
-				//1 year in milliseconds = 31556900000
-			var yearDate = age * 365.25;
+			//265.265 will still cause rounding errors sometimes.
+			var yearDate = age * 365.265;
 			var birthday = new Date(dateString);
+			birthday = curBday(birthday);
 			birthday.setDate(birthday.getDate() + yearDate);
-			//console.log(birthday);
 			return birthday;
+			*/
+			//Test Code --------------------------
+			var age = age + 1;
+			var x = dateString;
+			var y = new Date();
+			var birYear = x.getFullYear();
+			var nowYear = y.getFullYear();
+			x.setFullYear(birYear + age);
+			return x;
 		}
 		function daysLeft(futureBday){
-			//this is your birthday in epoch time
+			//this is the birthday in epoch time
 			var bDay = new Date(futureBday);
 			var today = new Date();
 			var msPerDay = 24*60*60*1000;
-			//figure out the date of your next birthday
+			//figure out the days left until your next birthday
 			//NOTE: this is rounded up (Math.round) no matter what so that the day before it won't say '0 days' or '.23' days remaining
 			var x = Math.round(((bDay.getTime() - today.getTime())/ msPerDay));
 			return x;
@@ -190,35 +207,47 @@
 <body>
 <div id="container">
 <nav>
-<h1>Birthday Calculator</h1>
-<h4>Alpha</h4>
+	<h1>Birthday Calculator</h1>
+	<hr /><h4>Alpha</h4>
 </nav>
 <form name="bdayForm" action="" method="get">
-	<!--
-	<h2>Enter your birthday</h2><input type="text" name="userBday" value="1988-12-29" />
-	
-	<h2>Birthdate</h2><input type="text" name="birthdate" value="" />
-	
-	<h2>Next birthdate</h2><input type="text" name="nextBirthdate" value="" />
-	
-	<h2>Age</h2><input type="text" name="age" value="" />
-	
-	<h2>Days left</h2><input type="text" name="daysLeft" value="" />
-	
-	<br /><br />
-	<input type="button" value="Calc" onClick="calcBday(this.form)" />
-	-->
 	<table border="1">
-		<tr><td><h2 id="firstRow">Enter your birthday</h2></td><td class="middle"></td><td><input type="text" name="userBday" class="userInput" maxlength="10" value="1987-12-03" /></td></tr>
-		<tr><td></td><td class="middle"></td><td><h5>yyyy-mm-dd</h5></td></tr>
-		<tr><td><h2>Age</h2></td><td class="middle"></td><td><input type="text" class="output" name="age" value="" readonly /></td></tr>
-		<tr><td><h2>Birthdate</h2></td><td class="middle"></td><td><input type="text" class="output" name="birthdate" value="" readonly /></td></tr>
-		<tr><td><h2>Next birthdate</h2></td><td class="middle"></td><td><input type="text" class="output" name="nextBirthdate" value="" readonly /></td></tr>
-		<tr><td><h2>Days left</h2></td><td class="middle"></td><td><input type="text" class="output" name="daysLeft" value="" readonly /></td></tr>
-		<tr><td><h2><input type="button" value="Calculate" onClick="calcBday(this.form)" /></h2></td><td class="middle"></td><td></td></tr>
+		<tr>
+			<td><h2 id="firstRow">Enter your birthday</h2></td>
+			<td class="middle"></td>
+			<td><input type="text" name="userBday" class="userInput" maxlength="10" value="1987-12-03" /></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td class="middle"></td>
+			<td><h5>yyyy-mm-dd</h5></td>
+		</tr>
+		<tr>
+			<td><h2>Age</h2></td>
+			<td class="middle"></td>
+			<td><label class="output" id="age"></label></td>
+		</tr>
+		<tr>
+			<td><h2>Birthdate</h2></td>
+			<td class="middle"></td>
+			<td><label class="output" id="birthdate"></label></td>
+		</tr>
+		<tr>
+			<td><h2>Next birthdate</h2></td>
+			<td class="middle"></td>
+			<td><label class="output" id="nextBirthdate"></label></td>
+		</tr>
+		<tr>
+			<td><h2>Days left</h2></td>
+			<td class="middle"></td>
+			<td><label class="output" id="daysLeft"></label></td>
+		</tr>
+		<tr>
+			<td><h2><input class="submit" type="button" value="Calculate" onClick="calcBday(this.form)" /></h2></td>
+			<td class="middle"></td>
+			<td></td>
+		</tr>
 	</table>
-	
-	
 </form>
 </div><!--end container-->
 </body>

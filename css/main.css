@@ -1,3 +1,8 @@
+@font-face {
+    font-family: liberation;
+    src: url(../fonts/LiberationSans-Regular.ttf);
+}
+
 html{
 	background-image: url('../img/clock.jpg');
 	background-size: 100%;
@@ -5,22 +10,39 @@ html{
 }
 td.middle {width: 10px;}
 #container {
-	width: 45%;
+	width: 50%;
 	margin:auto;
 	font-family: Georgia, serif;
 }
-nav {max-width: 565px;}
+nav {max-width: 80%;}
 
 h1 {font-size: 3.5em; margin-bottom: 0;}
-h2{padding: 0 15px 0 15px; text-align: right; margin-bottom: 20px;}
+h2{padding: 0 15px 0 15px; text-align: right; margin-bottom: 20px; font-size: 2em;}
 h2#firstRow{margin-bottom: 0;}
 h4 {text-align: right; margin-bottom: 25px; color: cyan;}
-h5{font-size: .7em; margin-bottom: 10px;}
+h5{font-size: .8em; margin-bottom: 10px; margin-top: 2px; text-align: center; width: 75px;}
+h2, h5, label.output, input { font-family: liberation, Helvetica Neue, Helvetica, sans-serif;}
+hr {float: left; width: 91%; border-color: cyan;}
 
-input.userInput{width: 75px; text-align: center; border: none;}
-input.output{border: none; padding-left: 6px; width: 200px;}
+input.userInput{
+	width: 75px;
+	height: 25px;
+	text-align: center;
+	border: solid 2px cyan;
+	border-left: none;
+	border-right: none;
+	background-color: black;
+	color: #fff;
+}
+input.submit {
+	width: 125px;
+	height: 30px;
+}
+input.userInput:focus{outline: 0; background-color: #424242;}
+label.output{border: none; padding-left: 6px; min-width: 275px; display: block; color: cyan; font-size: 1.2em;}
 table {
 	border-collapse: collapse;
+	border-spacing: 0;
 	float: right;
 	margin: 20px;
 	background-color:rgba(0,0,0,0.5);
