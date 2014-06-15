@@ -29,7 +29,8 @@
 		var age; //this will store the persons age
 		var futureBday; //this will store the user's future birthday after the calculation
 		var birthday; //this will store the user's birth day
-		var bDayCountdown;
+		var bDayCountdown; //how many days left until the next birthday
+		var unsetBday; //this holds the persons unset Bday, so that nextBday() doesn't set it's year
 		
 		function calcBday (form) {
 			//assigns user input to date variable
@@ -38,25 +39,29 @@
 			
 			//calculation of user input
 			birthday = dateString;
-				//console.log(birthday);
+				//print birthday object before it is altered
+				document.getElementById('birthdate').innerHTML = birthdateToString(birthday);
 			age = calcAge(dateString);
 			futureBday = nextBday(dateString, age);
-				//console.log(futureBday);
 			bDayCountdown = daysLeft(futureBday);
+
 			//Fill the form with the calculated values
 			if(isNaN(bDayCountdown)){
 				document.getElementById('firstRow').innerHTML = "Use YYYY-MM-DD";
 				document.getElementById('firstRow').style.color = "red";
+				document.getElementById('birthdate').innerHTML = "";
+				document.getElementById('nextBirthdate').innerHTML = "";
+				document.getElementById('age').innerHTML = "";
+				document.getElementById('daysLeft').innerHTML = "";
+				
 			}
 			else if (age <= 0){
 				document.getElementById('age').innerHTML = "You haven't been born yet!";
-				document.getElementById('birthdate').innerHTML = birthdateToString(birthday);
 				document.getElementById('nextBirthdate').innerHTML = birthdateToString(birthday);
 				document.getElementById('daysLeft').innerHTML = bDayCountdown;
 			}
 			else{
-				document.getElementById('birthdate').innerHTML = birthdateToString(birthday);
-				document.getElementById('nextBirthdate').innerHTML = futureDayToString(futureBday.toUTCString());
+				document.getElementById('nextBirthdate').innerHTML = futureDayToString(futureBday);
 				document.getElementById('age').innerHTML = age;
 				document.getElementById('daysLeft').innerHTML = bDayCountdown;
 			}
